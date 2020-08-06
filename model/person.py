@@ -1,6 +1,4 @@
-#!/usr/bin/env python3.8
-
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from base import Base
 
@@ -8,7 +6,7 @@ class Person(Base):
     '''
     Main ORM/Entity for person details. It contains data gender,
     email, phon cell and nationality fields, and is extended by name,
-    location, login dob, registered and id_id table.
+    location, login dob, registered and identity table.
     '''
     __tablename__ = 'person'
     person_id = Column(Integer, primary_key=True)
@@ -22,4 +20,4 @@ class Person(Base):
     login = relationship('Login', uselist=False, back_populates='person')
     dob = relationship('Dob', uselist=False, back_populates='person')
     registered = relationship('Registered', uselist=False, back_populates='person')
-    id_id = relationship('Id', uselist=False, back_populates='person')
+    identity = relationship('Identity', uselist=False, back_populates='person')
