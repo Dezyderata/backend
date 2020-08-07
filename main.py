@@ -10,6 +10,9 @@ from model import (person, name, login, location, dob,
                    identity, street, coordinates, timezone, registered)
 
 def days_to_birthday(birthday_string):
+    '''
+    This function is used to determine the number of days until a person's birthday.
+    '''
     date_format = '%Y-%m-%d'
     today_date = datetime.strptime(datetime.utcnow().strftime(date_format), date_format)
     if birthday_string[5:] == '02-29':
@@ -33,6 +36,10 @@ def days_to_birthday(birthday_string):
     return (birthday - today_date).days
 
 def database_content_init(record, session):
+    '''
+    This function is used to save the full record to the database.
+    '''
+    date_pattern = '%Y-%m-%dT%H:%M:%S.%fZ'
     record_items = []
     record_items.append(person.Person(record['gender'], record['email'], record['phone'],
                                       record['cell'], record['nat']))
@@ -55,10 +62,11 @@ def database_content_init(record, session):
                                     base_key['salt'], base_key['md5'], base_key['sha1'],
                                     base_key['sha256'], record_items[0]))
     base_key = record['dob']
-    record_items.append(dob.Dob(base_key['date'], base_key['age'], base_key['days_to_birthday'],
-                                record_items[0]))
+    record_items.append(dob.Dob(datetime.strptime(base_key['date'], date_pattern), base_key['age'],
+                                base_key['days_to_birthday'], record_items[0]))
     base_key = record['registered']
-    record_items.append(registered.Registered(base_key['date'], base_key['age'], record_items[0]))
+    record_items.append(registered.Registered(datetime.strptime(base_key['date'], date_pattern),
+                                              base_key['age'], record_items[0]))
     base_key = record['id']
     record_items.append(identity.Identity(base_key['name'], base_key['value'], record_items[0]))
     session.add_all(record_items)
@@ -67,8 +75,8 @@ def database_content_init(record, session):
 if not os.path.exists('test.db'):
     Base.metadata.create_all(engine)
     print('I created a database')
-session = Session()
-if session.query(person.Person).first() is None:
+curr_session = Session()
+if curr_session.query(person.Person).first() is None:
     with open('persons.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
     for record in data['results']:
@@ -76,6 +84,6 @@ if session.query(person.Person).first() is None:
         record['cell'] = re.sub('[^0-9]', '', record['cell'])
         record['phone'] = re.sub('[^0-9]', '', record['phone'])
         record['dob']['days_to_birthday'] = days_to_birthday(record['dob']['date'][:10])
-        database_content_init(record, session)
+        database_content_init(record, curr_session)
     print('I added records to databade')
-session.close()
+curr_session.close()

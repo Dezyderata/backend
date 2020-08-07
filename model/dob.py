@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, DateTime
 from sqlalchemy.orm import relationship, backref
 from base import Base
 
@@ -8,7 +8,7 @@ class Dob(Base):
     '''
     __tablename__ = 'dob'
     dob_id = Column(Integer, primary_key=True)
-    date = Column(String(24), nullable=False)
+    date = Column(DateTime, nullable=False)
     age = Column(Integer, nullable=False)
     days_to_birthday = Column(Integer, nullable=False)
     person_id = Column(Integer, ForeignKey('person.person_id'))
