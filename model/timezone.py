@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from base import Base
 
 class Timezone(Base):
@@ -11,4 +11,9 @@ class Timezone(Base):
     offset = Column(String(8))
     description = Column(String(100))
     location_id = Column(Integer, ForeignKey('location.location_id'))
-    location = relationship('Location', back_populates='timezone')
+    location = relationship('Location', backref=backref('timezone', uselist=False))
+
+    def __init__(self, offset, description, location):
+        self.offset = offset
+        self.description = description
+        self.location = location

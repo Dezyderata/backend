@@ -11,13 +11,14 @@ class Person(Base):
     __tablename__ = 'person'
     person_id = Column(Integer, primary_key=True)
     gender = Column(String(10))
-    email = Column(String(256), nullable=False)
+    email = Column(String(256), nullable=False) #email not unique 287 and 621
     phone = Column(String(15))
     cell = Column(String(15))
     nat = Column(String(4))
-    name = relationship('Name', uselist=False, back_populates='person')
-    location = relationship('Location', backref='person')
-    login = relationship('Login', uselist=False, back_populates='person')
-    dob = relationship('Dob', uselist=False, back_populates='person')
-    registered = relationship('Registered', uselist=False, back_populates='person')
-    identity = relationship('Identity', uselist=False, back_populates='person')
+
+    def __init__(self, gender, email, phone, cell, nat):
+        self.gender = gender
+        self.email = email
+        self.phone = phone
+        self.cell = cell
+        self.nat = nat

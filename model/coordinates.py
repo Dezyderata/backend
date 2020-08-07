@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from base import Base
 
 class Coordinates(Base):
@@ -11,4 +11,9 @@ class Coordinates(Base):
     latitude = Column(String(10))
     longitude = Column(String(10))
     location_id = Column(Integer, ForeignKey('location.location_id'))
-    location = relationship('Location', back_populates='coordinates')
+    location = relationship('Location', backref=backref('coordinates', uselist=False))
+
+    def __init__(self, latitude, longitude, location):
+        self.latitude = latitude
+        self.longitude = longitude
+        self.location = location

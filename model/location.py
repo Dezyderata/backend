@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from base import Base
 
 class Location(Base):
@@ -15,6 +15,11 @@ class Location(Base):
     country = Column(String(56), nullable=False)
     postcode = Column(Integer, nullable=False)
     person_id = Column(Integer, ForeignKey('person.person_id'))
-    street = relationship('Street', uselist=False, back_populates='location')
-    coordinates = relationship('Coordinates', uselist=False, back_populates='location')
-    timezone = relationship('Timezone', uselist=False, back_populates='location')
+    peson = relationship('Person', backref=backref('location', uselist=False))
+    
+    def __init__(self, city, state, country, postcode, person):
+        self.city = city
+        self.state = state
+        self.country = country
+        self.postcode = postcode
+        self.person = person

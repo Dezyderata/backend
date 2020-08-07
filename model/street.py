@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from base import Base
 
 class Street(Base):
@@ -11,4 +11,9 @@ class Street(Base):
     number = Column(Integer)
     name = Column(String(50))
     location_id = Column(Integer, ForeignKey('location.location_id'))
-    location = relationship('Location', back_populates='street')
+    location = relationship('Location', backref=backref('street', uselist=False))
+
+    def __init__(self, number, name, location):
+        self.number = number
+        self.name = name
+        self.location = location
