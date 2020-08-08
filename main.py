@@ -8,7 +8,7 @@ from datetime import datetime
 from base import Session, engine, Base
 from model import (person, name, login, location, dob,
                    identity, street, coordinates, timezone, registered)
-
+from sqlalchemy import func
 def days_to_birthday(birthday_string):
     '''
     This function is used to determine the number of days until a person's birthday.
@@ -86,4 +86,39 @@ if curr_session.query(person.Person).first() is None:
         record['dob']['days_to_birthday'] = days_to_birthday(record['dob']['date'][:10])
         database_content_init(record, curr_session)
     print('I added records to databade')
+'''
+gender percentage count
+'''
+def gender_percent(curr_session):
+    genders_counted = curr_session.query(
+        person.Person.gender, func.count(
+            person.Person.gender)).group_by(
+                person.Person.gender).all()
+    people_gen = 0
+    for gen in genders_counted:
+        people_gen += gen[1]
+    print(people_gen)
+    for gen in genders_counted:
+        print(f'Percent of {gen[0]}: {(gen[1]/people_gen)*100}%')
+'''
+'''
+def average_age(curr_session):
+    all_age = curr_session.query(func.avg(dob.Dob.age)).all()
+    print(f'Average age of all people in db: {all_age[0][0]:.2f}')
+    age_by_gender = curr_session.query(
+        person.Person.gender, func.avg(dob.Dob.age)).filter(
+            person.Person.person_id==dob.Dob.person_id).group_by(
+                person.Person.gender).all()
+    for gen in age_by_gender:
+        print(f'Average age for {gen[0]}: {gen[1]:.2f}')
+'''
+'''
+def most_popular_cities(n, curr_session):
+    cities_list = curr_session.query(
+        location.Location.city, func.count(location.Location.city)).group_by(
+            location.Location.city).order_by(
+                func.count(location.Location.city).desc()).limit(n).all()
+    print(cities_list)
+average_age(curr_session)
+most_popular_cities(5, curr_session)
 curr_session.close()
