@@ -74,7 +74,7 @@ def database_content_init(record, session):
 
 if not os.path.exists('test.db'):
     Base.metadata.create_all(engine)
-    print('I created a database')
+    print('I have created a database')
 curr_session = Session()
 if curr_session.query(person.Person).first() is None:
     with open('persons.json', encoding='utf-8') as json_file:
@@ -117,8 +117,35 @@ def most_popular_cities(n, curr_session):
     cities_list = curr_session.query(
         location.Location.city, func.count(location.Location.city)).group_by(
             location.Location.city).order_by(
-                func.count(location.Location.city).desc()).limit(n).all()
-    print(cities_list)
+                func.count(location.Location.city).desc(),
+                location.Location.city.asc()).limit(n).all()
+    for city in cities_list:
+        print(f'{city[0]}: {city[1]}')
+'''
+'''
+def most_popular_passwords(n, curr_session):
+    passwords_list = curr_session.query(
+        login.Login.password, func.count(login.Login.password)).group_by(
+            login.Login.password).order_by(
+                func.count(login.Login.password).desc(),
+                login.Login.password.asc()).limit(n).all()
+    for passwd in passwords_list:
+        print(f'{passwd[0]}: {passwd[1]}')
+'''
+'''
+def born_between(start_date_str, stop_date_str, curr_session):
+    date_format = '%Y-%m-%d'
+    start_date = datetime.strptime(start_date_str, date_format)
+    stop_date = datetime.strptime(stop_date_str, date_format)
+    people_between = curr_session.query(
+        login.Login.username).filter(
+            login.Login.person_id==dob.Dob.person_id,
+                dob.Dob.date.between(start_date, stop_date)).all()
+    for person in people_between:
+        print(person[0])
+
 average_age(curr_session)
 most_popular_cities(5, curr_session)
+most_popular_passwords(10, curr_session)
+born_between('1966-01-01', '1967-01-01', curr_session)
 curr_session.close()
