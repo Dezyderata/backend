@@ -48,10 +48,7 @@ class Controller:
         for passwd in passwords_list:
             print(f'{passwd[0]}: {passwd[1]}')
 
-    def born_between(self, start_date_str, stop_date_str):
-        date_format = '%Y-%m-%d'
-        start_date = datetime.strptime(start_date_str, date_format)
-        stop_date = datetime.strptime(stop_date_str, date_format)
+    def born_between(self, start_date, stop_date):
         people_between = self.curr_session.query(
             login.Login.username).filter(
                 login.Login.person_id == dob.Dob.person_id, dob.Dob.date.between(
