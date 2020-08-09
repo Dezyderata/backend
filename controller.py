@@ -9,6 +9,10 @@ class Controller:
         self.curr_session = curr_session
 
     def gender_percent(self):
+        '''
+        Method executing query on database that returns counted genders
+        and printing percentage of genders.
+        '''
         genders_counted = self.curr_session.query(
             person.Person.gender, func.count(
                 person.Person.gender)).group_by(
@@ -16,11 +20,14 @@ class Controller:
         people_gen = 0
         for gen in genders_counted:
             people_gen += gen[1]
-        print(people_gen)
         for gen in genders_counted:
             print(f'Percent of {gen[0]}: {(gen[1]/people_gen)*100}%')
 
     def average_age(self):
+        '''
+        Method executing queries on database returning global average age and
+        average for each gender.
+        '''
         all_age = self.curr_session.query(func.avg(dob.Dob.age)).all()
         print(f'Average age of all people in db: {all_age[0][0]:.2f}')
         age_by_gender = self.curr_session.query(
@@ -31,6 +38,10 @@ class Controller:
             print(f'Average age for {gen[0]}: {gen[1]:.2f}')
 
     def most_popular_cities(self, number):
+        '''
+        Method executing query on database that returns most popular cities in it.
+        In "number" argument user can define have many cities will be shown.
+        '''
         cities_list = self.curr_session.query(
             location.Location.city, func.count(location.Location.city)).group_by(
                 location.Location.city).order_by(
@@ -40,6 +51,10 @@ class Controller:
             print(f'{city[0]}: {city[1]}')
 
     def most_popular_passwords(self, number):
+        '''
+        Method executing query on database that returns most popular posswords in it.
+        In "number" argument user can define have many passwords will be shown.
+        '''
         passwords_list = self.curr_session.query(
             login.Login.password, func.count(login.Login.password)).group_by(
                 login.Login.password).order_by(
@@ -48,10 +63,11 @@ class Controller:
         for passwd in passwords_list:
             print(f'{passwd[0]}: {passwd[1]}')
 
-    def born_between(self, start_date_str, stop_date_str):
-        date_format = '%Y-%m-%d'
-        start_date = datetime.strptime(start_date_str, date_format)
-        stop_date = datetime.strptime(stop_date_str, date_format)
+    def born_between(self, start_date, stop_date):
+        '''
+        Method executing query on database that returns people born between two dates.
+        Mathod required two arguments in format YYYY-MM-DD.
+        '''
         people_between = self.curr_session.query(
             login.Login.username).filter(
                 login.Login.person_id == dob.Dob.person_id, dob.Dob.date.between(
@@ -60,6 +76,10 @@ class Controller:
             print(item[0])
 
     def best_password(self):
+        '''
+        Method executing query on database that returns unique passwords and
+        selects best password base on conditions like length and digit appearance.
+        '''
         passwords = self.curr_session.query(login.Login.password).distinct().all()
         best_score = 0
         best_pass = ''
@@ -78,5 +98,4 @@ class Controller:
             if score > best_score:
                 best_score = score
                 best_pass = passwd
-                print(f'New best password: {best_pass} with score: {best_score}')
-        print(f'Best password: {best_pass} with score: {best_score}')
+        print(f'Best password: {best_pass} with score: {best_score}') 

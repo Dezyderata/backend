@@ -2,6 +2,7 @@ import os
 import re
 import json
 import calendar
+import sys
 from datetime import datetime
 from base import engine, Base
 from model import (person, name, login, location, dob,
@@ -90,3 +91,4 @@ class Importer:
                 print('I have added records to database')
             except IOError:
                 print('I find lack of this persons.json file very disturbing!')
+                sys.exit()
