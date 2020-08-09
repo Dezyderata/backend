@@ -1,8 +1,9 @@
 import argparse
-from datetime import date, datetime
+from datetime import datetime
 from base import Session
 import importer
 import controller
+
 
 class Config:
 
@@ -15,6 +16,9 @@ class Config:
         self.parser = argparse.ArgumentParser()
 
     def cli(self):
+        '''
+        Possible arguments creation.
+        '''
         self.parser.add_argument(
             '-gp', '--gender_percent', action='store_true',
             help='''Prints percentage of each gender in database.
