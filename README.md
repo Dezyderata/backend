@@ -1,5 +1,3 @@
-Backend Developer internship recruitment task.
-
 List of possible arguments:
 
 	'-h', '--help'- Prints all possible arguments and their descriptions.
