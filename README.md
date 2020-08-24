@@ -23,6 +23,6 @@ List of possible arguments:
 					   Require one integer argument to determent list length.
 					   Example run: *python main.py --most_common_passwords 5*
 
-        '-bb', '--born_between' - Prints list of people born between two dates.
+	'-bb', '--born_between' - Prints list of people born between two dates.
             			  Require two arguments in format "YYYY-MM-DD".
 				  Example run: *python main.py -bb '1966-01-01' '1967-01-01'*
