@@ -93,7 +93,7 @@ class Controller:
                 score += 1
             if len(passwd) > 7:
                 score += 5
-            if re.search('[^a-zA-Z0-9\\s]', passwd):
+            if re.search('[^a-zA-Z0-9\s]', passwd):
                 score += 3
             if score > best_score:
                 best_score = score
